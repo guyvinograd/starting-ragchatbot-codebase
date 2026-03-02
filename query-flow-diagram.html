@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Query Flow Diagram</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 40px;
+            color: #f8fafc;
+            font-weight: 600;
+        }
+        .diagram {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* Step row */
+        .step {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            margin-bottom: 8px;
+            position: relative;
+        }
+
+        /* Step number badge */
+        .step-num {
+            flex-shrink: 0;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            margin-top: 14px;
+            z-index: 2;
+        }
+
+        /* Box */
+        .box {
+            flex: 1;
+            border-radius: 12px;
+            padding: 16px 20px;
+            position: relative;
+            border: 1px solid;
+        }
+        .box h3 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .box .file {
+            font-size: 0.75rem;
+            font-family: 'Cascadia Code', 'Fira Code', monospace;
+            opacity: 0.7;
+            margin-bottom: 6px;
+        }
+        .box p {
+            font-size: 0.85rem;
+            line-height: 1.5;
+            opacity: 0.9;
+        }
+        .box code {
+            background: rgba(0,0,0,0.3);
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-family: 'Cascadia Code', 'Fira Code', monospace;
+        }
+
+        /* Arrow connector */
+        .arrow {
+            display: flex;
+            justify-content: center;
+            padding: 0 0 0 18px;
+            height: 28px;
+            position: relative;
+        }
+        .arrow svg {
+            height: 28px;
+            width: 24px;
+        }
+
+        /* Color themes */
+        .frontend .step-num { background: #6366f1; color: #fff; }
+        .frontend .box { background: #1e1b4b; border-color: #4338ca; }
+
+        .api .step-num { background: #0ea5e9; color: #fff; }
+        .api .box { background: #0c2a3e; border-color: #0369a1; }
+
+        .rag .step-num { background: #14b8a6; color: #fff; }
+        .rag .box { background: #042f2e; border-color: #0f766e; }
+
+        .ai .step-num { background: #f59e0b; color: #1a1a1a; }
+        .ai .box { background: #2a1f00; border-color: #b45309; }
+
+        .tool .step-num { background: #ec4899; color: #fff; }
+        .tool .box { background: #2d0a1e; border-color: #be185d; }
+
+        .vector .step-num { background: #8b5cf6; color: #fff; }
+        .vector .box { background: #1a0a2e; border-color: #6d28d9; }
+
+        .response .step-num { background: #22c55e; color: #fff; }
+        .response .box { background: #052e16; border-color: #15803d; }
+
+        /* Branch section */
+        .branch {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 8px;
+            padding-left: 56px;
+        }
+        .branch-path {
+            flex: 1;
+            border-radius: 12px;
+            padding: 14px 18px;
+            border: 1px solid;
+            position: relative;
+        }
+        .branch-path h4 {
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .branch-path p {
+            font-size: 0.82rem;
+            line-height: 1.4;
+            opacity: 0.85;
+        }
+        .branch-label {
+            text-align: center;
+            padding: 4px 0 8px 56px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #f59e0b;
+            letter-spacing: 0.5px;
+        }
+
+        .path-direct { background: #052e16; border-color: #15803d; }
+        .path-direct h4 { color: #4ade80; }
+        .path-tool { background: #2d0a1e; border-color: #be185d; }
+        .path-tool h4 { color: #f472b6; }
+
+        /* Merge arrow */
+        .merge-arrow {
+            display: flex;
+            justify-content: center;
+            padding: 0 0 0 18px;
+            height: 20px;
+        }
+
+        /* Data label on arrows */
+        .arrow-label {
+            text-align: center;
+            padding: 0 0 0 56px;
+            font-size: 0.72rem;
+            font-family: 'Cascadia Code', 'Fira Code', monospace;
+            color: #94a3b8;
+            margin-top: -4px;
+            margin-bottom: 4px;
+        }
+
+        /* Legend */
+        .legend {
+            max-width: 900px;
+            margin: 40px auto 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            justify-content: center;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <h1>RAG Chatbot — Query Flow</h1>
+
+    <div class="diagram">
+
+        <!-- Step 1 -->
+        <div class="step frontend">
+            <div class="step-num">1</div>
+            <div class="box">
+                <h3>User Input</h3>
+                <div class="file">frontend/script.js : sendMessage()</div>
+                <p>User types a question and presses Enter or clicks Send. Input is disabled and a loading animation appears.</p>
+            </div>
+        </div>
+
+        <div class="arrow"><svg viewBox="0 0 24 28"><path d="M12 0 V20 M6 16 L12 24 L18 16" stroke="#475569" stroke-width="2" fill="none"/></svg></div>
+        <div class="arrow-label">POST /api/query → { query, session_id }</div>
+
+        <!-- Step 2 -->
+        <div class="step api">
+            <div class="step-num">2</div>
+            <div class="box">
+                <h3>FastAPI Route</h3>
+                <div class="file">backend/app.py : query_documents()</div>
+                <p>Receives <code>QueryRequest</code>. Creates a session if <code>session_id</code> is null, then delegates to the RAG system.</p>
+            </div>
+        </div>
+
+        <div class="arrow"><svg viewBox="0 0 24 28"><path d="M12 0 V20 M6 16 L12 24 L18 16" stroke="#475569" stroke-width="2" fill="none"/></svg></div>
+        <div class="arrow-label">rag_system.query(query, session_id)</div>
+
+        <!-- Step 3 -->
+        <div class="step rag">
+            <div class="step-num">3</div>
+            <div class="box">
+                <h3>RAG Orchestrator</h3>
+                <div class="file">backend/rag_system.py : query()</div>
+                <p>Wraps query in a prompt, fetches conversation history from <code>SessionManager</code>, and calls the AI generator with tool definitions.</p>
+            </div>
+        </div>
+
+        <div class="arrow"><svg viewBox="0 0 24 28"><path d="M12 0 V20 M6 16 L12 24 L18 16" stroke="#475569" stroke-width="2" fill="none"/></svg></div>
+        <div class="arrow-label">ai_generator.generate_response(prompt, history, tools)</div>
+
+        <!-- Step 4 -->
+        <div class="step ai">
+            <div class="step-num">4</div>
+            <div class="box">
+                <h3>Claude API Call</h3>
+                <div class="file">backend/ai_generator.py : generate_response()</div>
+                <p>Sends system prompt + user message + tool definitions to Anthropic API with <code>tool_choice: auto</code>. Claude decides whether to search or answer directly.</p>
+            </div>
+        </div>
+
+        <!-- Branch -->
+        <div class="branch-label">Claude's stop_reason?</div>
+        <div class="branch">
+            <div class="branch-path path-direct">
+                <h4>Direct Answer</h4>
+                <p>General knowledge question — Claude responds with text immediately. Returns <code>response.content[0].text</code>.</p>
+            </div>
+            <div class="branch-path path-tool">
+                <h4>Tool Use → Step 5</h4>
+                <p>Course-specific question — Claude requests <code>search_course_content</code> tool call with query, course_name, lesson_number.</p>
+            </div>
+        </div>
+
+        <div class="arrow"><svg viewBox="0 0 24 28"><path d="M12 0 V20 M6 16 L12 24 L18 16" stroke="#475569" stroke-width="2" fill="none"/></svg></div>
+
+        <!-- Step 5 -->
+        <div class="step tool">
+            <div class="step-num">5</div>
+            <div class="box">
+                <h3>Tool Execution</h3>
+                <div class="file">backend/search_tools.py : CourseSearchTool.execute()</div>
+                <p>Called by <code>ToolManager</code>. Delegates to the vector store's search interface with optional course and lesson filters.</p>
+            </div>
+        </div>
+
+        <div class="arrow"><svg viewBox="0 0 24 28"><path d="M12 0 V20 M6 16 L12 24 L18 16" stroke="#475569" stroke-width="2" fill="none"/></svg></div>
+        <div class="arrow-label">vector_store.search(query, course_name, lesson_number)</div>
+
+        <!-- Step 6 -->
+        <div class="step vector">
+            <div class="step-num">6</div>
+            <div class="box">
+                <h3>Vector Search (ChromaDB)</h3>
+                <div class="file">backend/vector_store.py : search()</div>
+                <p>Resolves fuzzy course names via semantic search on <code>course_catalog</code>. Builds a where-filter, then queries <code>course_content</code> collection. Returns top 5 matching chunks.</p>
+            </div>
+        </div>
+
+        <div class="arrow"><svg viewBox="0 0 24 28"><path d="M12 0 V20 M6 16 L12 24 L18 16" stroke="#475569" stroke-width="2" fill="none"/></svg></div>
+        <div class="arrow-label">formatted results → 2nd Anthropic API call → final answer</div>
+
+        <!-- Step 7 -->
+        <div class="step ai">
+            <div class="step-num">7</div>
+            <div class="box">
+                <h3>Claude Synthesizes Answer</h3>
+                <div class="file">backend/ai_generator.py : _handle_tool_execution()</div>
+                <p>Tool results are appended to the message history. A second API call (without tools) lets Claude synthesize a final answer from the search results.</p>
+            </div>
+        </div>
+
+        <div class="arrow"><svg viewBox="0 0 24 28"><path d="M12 0 V20 M6 16 L12 24 L18 16" stroke="#475569" stroke-width="2" fill="none"/></svg></div>
+        <div class="arrow-label">{ answer, sources[], session_id } → JSON response</div>
+
+        <!-- Step 8 -->
+        <div class="step response">
+            <div class="step-num">8</div>
+            <div class="box">
+                <h3>Render Response</h3>
+                <div class="file">frontend/script.js : addMessage()</div>
+                <p>Answer is parsed as Markdown via <code>marked.js</code> and displayed. Sources appear in a collapsible <code>&lt;details&gt;</code> element. Session ID is stored for follow-up queries.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Legend -->
+    <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#6366f1"></div> Frontend</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#0ea5e9"></div> API Layer</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#14b8a6"></div> RAG Orchestrator</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div> Claude AI</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#ec4899"></div> Tool System</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#8b5cf6"></div> Vector DB</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#22c55e"></div> Response</div>
+    </div>
+</body>
+</html>
