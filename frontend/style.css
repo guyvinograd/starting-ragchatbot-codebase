@@ -1,5 +1,7 @@
 /* Modern CSS Reset */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -343,9 +345,15 @@ header h1 {
     font-weight: 600;
 }
 
-.message-content h1 { font-size: 1.5rem; }
-.message-content h2 { font-size: 1.3rem; }
-.message-content h3 { font-size: 1.1rem; }
+.message-content h1 {
+    font-size: 1.5rem;
+}
+.message-content h2 {
+    font-size: 1.3rem;
+}
+.message-content h3 {
+    font-size: 1.1rem;
+}
 
 .message-content p {
     margin: 0.5rem 0;
@@ -681,7 +689,9 @@ details[open] .suggested-header::before {
     padding-top: 0.25rem;
 }
 
-.no-courses, .loading, .error {
+.no-courses,
+.loading,
+.error {
     font-size: 0.85rem;
     color: var(--text-secondary);
     font-style: italic;
