@@ -1,6 +1,7 @@
 import warnings
 warnings.filterwarnings("ignore", message="resource_tracker: There appear to be.*")
 
+import traceback
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -40,10 +41,14 @@ class QueryRequest(BaseModel):
     query: str
     session_id: Optional[str] = None
 
+class Source(BaseModel):
+    text: str
+    url: Optional[str] = None
+
 class QueryResponse(BaseModel):
     """Response model for course queries"""
     answer: str
-    sources: List[str]
+    sources: List[Source]
     session_id: str
 
 class CourseStats(BaseModel):
@@ -71,7 +76,13 @@ async def query_documents(request: QueryRequest):
             session_id=session_id
         )
     except Exception as e:
+        traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.delete("/api/clear-session/{session_id}")
+async def clear_session(session_id: str):
+    rag_system.session_manager.clear_session(session_id)
+    return {"status": "cleared"}
 
 @app.get("/api/courses", response_model=CourseStats)
 async def get_course_stats():

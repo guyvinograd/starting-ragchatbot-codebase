@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     totalCourses = document.getElementById('totalCourses');
     courseTitles = document.getElementById('courseTitles');
     
+    document.getElementById('newChatBtn').addEventListener('click', createNewSession);
     setupEventListeners();
     createNewSession();
     loadCourseStats();
@@ -125,7 +126,7 @@ function addMessage(content, type, sources = null, isWelcome = false) {
         html += `
             <details class="sources-collapsible">
                 <summary class="sources-header">Sources</summary>
-                <div class="sources-content">${sources.join(', ')}</div>
+                <div class="sources-content">${sources.map(s => s.url ? `<a href="${s.url}" target="_blank" rel="noopener noreferrer">${s.text}</a>` : `<span>${s.text}</span>`).join('')}</div>
             </details>
         `;
     }
@@ -147,6 +148,10 @@ function escapeHtml(text) {
 // Removed removeMessage function - no longer needed since we handle loading differently
 
 async function createNewSession() {
+    if (currentSessionId) {
+        await fetch(`/api/clear-session/${currentSessionId}`, { method: 'DELETE' })
+            .catch(() => {}); // best-effort; don't block UI on failure
+    }
     currentSessionId = null;
     chatMessages.innerHTML = '';
     addMessage('Welcome to the Course Materials Assistant! I can help you with questions about courses, lessons and specific content. What would you like to know?', 'assistant', null, true);

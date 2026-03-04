@@ -241,8 +241,27 @@ header h1 {
 }
 
 .sources-content {
-    padding: 0 0.5rem 0.25rem 1.5rem;
-    color: var(--text-secondary);
+    padding: 0.25rem 0.5rem 0.25rem 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.sources-content a {
+    display: inline-block;
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+    background: rgba(99, 102, 241, 0.15);
+    color: #a5b4fc;
+    text-decoration: none;
+    font-size: 0.75rem;
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    transition: background 0.15s, color 0.15s;
+}
+
+.sources-content a:hover {
+    background: rgba(99, 102, 241, 0.35);
+    color: #e0e7ff;
 }
 
 /* Markdown formatting styles */
@@ -709,6 +728,35 @@ details[open] .suggested-header::before {
         padding: 0.5rem 0.75rem;
         font-size: 0.8rem;
     }
+}
+
+/* New Chat Button */
+.new-chat-btn {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 0.5rem 0;
+    padding-left: 1.2rem;
+    width: 100%;
+    text-align: left;
+    transition: color 0.2s ease;
+    -webkit-appearance: none;
+    appearance: none;
+    display: block;
+}
+
+.new-chat-btn:focus {
+    color: var(--primary-color);
+}
+
+.new-chat-btn:hover {
+    color: var(--primary-color);
 }
 
 @media (max-width: 1024px) {
