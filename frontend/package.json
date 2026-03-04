@@ -1,0 +1,13 @@
+{
+    "name": "course-assistant-frontend",
+    "version": "1.0.0",
+    "description": "Frontend for the RAG course materials chatbot",
+    "scripts": {
+        "format": "prettier --write .",
+        "format:check": "prettier --check .",
+        "quality": "prettier --check . && echo 'All checks passed!'"
+    },
+    "devDependencies": {
+        "prettier": "^3.4.2"
+    }
+}
