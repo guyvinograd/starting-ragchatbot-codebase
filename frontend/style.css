@@ -809,32 +809,83 @@ details[open] .suggested-header::before {
 }
 
 /* New Chat Button */
+@keyframes shimmer {
+    0% { background-position: -200% center; }
+    100% { background-position: 200% center; }
+}
+
+@keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 8px rgba(37, 99, 235, 0.4), 0 2px 12px rgba(37, 99, 235, 0.25); }
+    50% { box-shadow: 0 0 16px rgba(99, 153, 255, 0.6), 0 4px 20px rgba(37, 99, 235, 0.4); }
+}
+
 .new-chat-btn {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: yellow;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #ffffff;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    background: none;
+    letter-spacing: 2px;
+    background: linear-gradient(
+        135deg,
+        #2563eb 0%,
+        #3b82f6 40%,
+        #60a5fa 60%,
+        #2563eb 100%
+    );
+    background-size: 200% auto;
     border: none;
     outline: none;
     cursor: pointer;
-    padding: 0.5rem 0;
-    padding-left: 1.2rem;
+    padding: 0.75rem 1.25rem;
     width: 100%;
-    text-align: left;
-    transition: color 0.2s ease;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0 0 8px rgba(37, 99, 235, 0.4), 0 2px 12px rgba(37, 99, 235, 0.25);
+    animation: pulse-glow 3s ease-in-out infinite;
     -webkit-appearance: none;
     appearance: none;
     display: block;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, letter-spacing 0.2s ease;
 }
 
-.new-chat-btn:focus {
-    color: var(--primary-color);
+.new-chat-btn::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transform: skewX(-20deg);
+    transition: none;
+}
+
+.new-chat-btn:hover::before {
+    animation: shimmer 0.6s ease forwards;
+    left: 160%;
+}
+
+@keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 160%; }
 }
 
 .new-chat-btn:hover {
-    color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(96, 165, 250, 0.6), 0 6px 24px rgba(37, 99, 235, 0.5);
+    letter-spacing: 3px;
+    animation: none;
+}
+
+.new-chat-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 0 8px rgba(37, 99, 235, 0.4);
+}
+
+.new-chat-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--focus-ring), 0 0 16px rgba(37, 99, 235, 0.5);
 }
 
 @media (max-width: 1024px) {
