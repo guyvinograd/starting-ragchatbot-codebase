@@ -812,7 +812,7 @@ details[open] .suggested-header::before {
 .new-chat-btn {
     font-size: 0.875rem;
     font-weight: 600;
-    color: var(--text-secondary);
+    color: yellow;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     background: none;
